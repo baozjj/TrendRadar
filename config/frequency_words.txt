@@ -1,16 +1,14 @@
-前端框架
 React
 Vue
 Angular
 Svelte
 Next.js
 Nuxt
-+前端
 
 TypeScript
 JavaScript
 ES6
-+开发
+ES2024
 
 Node.js
 Deno
@@ -18,26 +16,23 @@ Bun
 npm
 pnpm
 yarn
-+工具
 
 Webpack
 Vite
 Rollup
 esbuild
-+构建
+Turbopack
 
 Tailwind
 CSS
 Sass
 Less
-+样式
 
 性能优化
 浏览器
 Chrome
 Safari
 Firefox
-+性能
 
 微前端
 组件库
@@ -45,37 +40,41 @@ Firefox
 Ant Design
 Element
 Material Design
-+组件
 
 GraphQL
 RESTful
 API
 接口
-+数据
 
-移动端
-H5
 小程序
 uni-app
 Taro
 React Native
 Flutter
-+开发
 
 前端工程化
 脚手架
 CI/CD
 自动化
-+部署
+Docker
 
 Web3
 区块链
 智能合约
 以太坊
-+前端
 
 AI
 ChatGPT
 Claude
 Copilot
-+前端
+DeepSeek
+
+GitHub
+开源
+项目
+star
+
+技术
+编程
+开发者
+工程师
