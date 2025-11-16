@@ -7,6 +7,10 @@ import re
 import time
 import webbrowser
 import smtplib
+import hmac
+import hashlib
+import base64
+import urllib.parse
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
@@ -141,6 +145,9 @@ def load_config():
     config["DINGTALK_WEBHOOK_URL"] = os.environ.get(
         "DINGTALK_WEBHOOK_URL", ""
     ).strip() or webhooks.get("dingtalk_url", "")
+    config["DINGTALK_SECRET"] = os.environ.get(
+        "DINGTALK_SECRET", ""
+    ).strip() or webhooks.get("dingtalk_secret", "")
     config["WEWORK_WEBHOOK_URL"] = os.environ.get(
         "WEWORK_WEBHOOK_URL", ""
     ).strip() or webhooks.get("wework_url", "")
@@ -3510,11 +3517,26 @@ def send_to_dingtalk(
     proxy_url: Optional[str] = None,
     mode: str = "daily",
 ) -> bool:
-    """发送到钉钉（支持分批发送）"""
+    """发送到钉钉（支持分批发送和加签验证）"""
     headers = {"Content-Type": "application/json"}
     proxies = None
     if proxy_url:
         proxies = {"http": proxy_url, "https": proxy_url}
+
+    # 处理钉钉加签
+    dingtalk_secret = CONFIG.get("DINGTALK_SECRET", "")
+    if dingtalk_secret:
+        timestamp = str(round(time.time() * 1000))
+        secret_enc = dingtalk_secret.encode('utf-8')
+        string_to_sign = '{}\n{}'.format(timestamp, dingtalk_secret)
+        string_to_sign_enc = string_to_sign.encode('utf-8')
+        hmac_code = hmac.new(secret_enc, string_to_sign_enc, digestmod=hashlib.sha256).digest()
+        sign = urllib.parse.quote_plus(base64.b64encode(hmac_code))
+        
+        # 在 URL 后面拼接 timestamp 和 sign
+        separator = '&' 
+        webhook_url = f"{webhook_url}{separator}timestamp={timestamp}&sign={sign}"
+        print(f"\n===== 钉钉请求URL =====\n{webhook_url}\n=====================\n")
 
     # 获取分批内容，使用钉钉专用的批次大小
     batches = split_content_into_batches(
